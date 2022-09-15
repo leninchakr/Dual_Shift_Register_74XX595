@@ -1,32 +1,20 @@
-/*************  1. External header files    *****************/
-
-
-/*************  2. define statement       *****************/
-#define latchPin  2
+/*************  1. define statement       *****************/
+#define latchPin  2   //  Arduino Pins
 #define clockPin  3
 #define dataPin   4
 
-/*************  3. Global variable        *****************/
+/*************  2. Static variable        *****************/
+static volatile int dataByte = 0;
+static volatile bool dataBit = 0;
 
+/*************  3. Static funtion declaration *****************/
+static void initSR(void);
+static void clkPulse(int clk);
+static void bitWrt(bool dataBit);
+static void shiftOutData(int data);
+static void shiftAllData(int dataByte);
 
-/*************  4. Static variable        *****************/
-volatile int dataByte = 0;
-volatile bool dataBit = 0;
-
-/*************  5.  User defined variables    *****************/
-
-
-/*************  6. Global funtion declaration   *****************/
-
-
-/*************  7. Static funtion declaration *****************/
-void initSR(void);
-void clkPulse(int clk);
-void bitWrt(bool dataBit);
-void shiftOutData(int data);
-void shiftAllData(int dataByte);
-
-/*************  8. main, setup, loop      *****************/
+/*************  4. main, setup, loop      *****************/
 void setup()
 {
   pinMode(latchPin, OUTPUT);
@@ -34,7 +22,7 @@ void setup()
   pinMode(dataPin, OUTPUT);
   
   initSR();
-  dataByte = 0b1110110011111111;
+  dataByte = 0b1110110011111111;    //  Sample 16-bit data
 }
 
 void loop()
@@ -43,18 +31,15 @@ void loop()
   while(1);
 }
 
-/*************  9. Global function definition *****************/
-
-
-/*************  10. Static function definition  *****************/
-void  initSR(void)
+/*************  5. Static function definition  *****************/
+static void  initSR(void)
 {
   digitalWrite(latchPin, LOW);
   digitalWrite(clockPin, LOW);
   digitalWrite(dataPin, LOW);
 }
 
-void clkPulse(int clk)
+static void clkPulse(int clk)
 {
   digitalWrite(clk, HIGH);
   delay(10);
@@ -62,7 +47,7 @@ void clkPulse(int clk)
   delay(10);
 }
 
-void shiftOutData(int data)
+static void shiftOutData(int data)
 {
   for (int i=7; i>=0; i--)
   {
@@ -73,18 +58,16 @@ void shiftOutData(int data)
   clkPulse(latchPin); 
 }
 
-void bitWrt(bool dataBit)
+static void bitWrt(bool dataBit)
 {
   digitalWrite(dataPin, dataBit);
   clkPulse(clockPin);
 }
 
-void shiftAllData(int dataByte)
+static void shiftAllData(int dataByte)
 {
   int dummyLsb = dataByte & 0b11111111;
   shiftOutData(dummyLsb);
   int dummyUsb = (dataByte >> 8);
   shiftOutData(dummyUsb);
 }
-
-/*************  11. ISR definition        *****************/
