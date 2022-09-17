@@ -8,11 +8,9 @@ static volatile int dataByte = 0;
 static volatile bool dataBit = 0;
 
 /*************  3. Static funtion declaration *****************/
-static void initSR(void);
 static void clkPulse(int clk);
 static void bitWrt(bool dataBit);
 static void shiftOutData(int data);
-static void shiftAllData(int dataByte);
 
 /*************  4. main, setup, loop      *****************/
 void setup()
@@ -32,7 +30,7 @@ void loop()
 }
 
 /*************  5. Static function definition  *****************/
-static void  initSR(void)
+void initSR(void)
 {
   digitalWrite(latchPin, LOW);
   digitalWrite(clockPin, LOW);
@@ -64,7 +62,7 @@ static void bitWrt(bool dataBit)
   clkPulse(clockPin);
 }
 
-static void shiftAllData(int dataByte)
+void shiftAllData(int dataByte)
 {
   int dummyLsb = dataByte & 0b11111111;
   shiftOutData(dummyLsb);
