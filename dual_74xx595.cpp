@@ -4,7 +4,6 @@
 #define dataPin   4
 
 /*************  2. Static variable        *****************/
-static volatile int dataByte = 0;
 static volatile bool dataBit = 0;
 
 /*************  3. Static funtion declaration *****************/
@@ -12,7 +11,9 @@ static void clkPulse(int clk);
 static void bitWrt(bool dataBit);
 static void shiftOutData(int data);
 
-/*************  4. main, setup, loop      *****************/
+/*************  4. main, setup, loop from Arduino   *****************/
+volatile int dataByte = 0;
+
 void setup()
 {
   pinMode(latchPin, OUTPUT);
